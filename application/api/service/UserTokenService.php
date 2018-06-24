@@ -10,11 +10,12 @@ namespace app\api\service;
 
 
 use app\api\model\User;
+use app\lib\enum\ScopeEnum;
 use app\lib\exception\TokenException;
 use app\lib\exception\WxException;
 use think\Exception;
 
-class UserToken extends Token {
+class UserTokenService extends TokenService {
 
     protected $code;
     protected $wxAppId;
@@ -85,7 +86,8 @@ class UserToken extends Token {
     private function prepareCachedValue($wxResult, $uid) {
         $cachedValue = $wxResult;
         $cachedValue['uid'] = $uid;
-        $cachedValue['scope'] = 16; // 数字越大，权限越大
+        // scope 16代表用户的权限数值，32代表管理员CMS的权限
+        $cachedValue['scope'] = ScopeEnum::User; // 数字越大，权限越大
         return $cachedValue;
     }
 

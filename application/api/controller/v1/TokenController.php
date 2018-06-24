@@ -2,7 +2,7 @@
 
 namespace app\api\controller\v1;
 
-use app\api\service\UserToken;
+use app\api\service\UserTokenService;
 use app\api\validate\TokenGet;
 use think\Controller;
 use think\Request;
@@ -19,7 +19,7 @@ class TokenController extends Controller
      */
     public function getToken($code = '') {
         (new TokenGet())->goCheck();
-        $token = (new UserToken($code))->get($code);
+        $token = (new UserTokenService($code))->get($code);
         // 不要直接返回字符串，而要返回成关联数组，框架会自动转成json
         return ['token' => $token];
     }

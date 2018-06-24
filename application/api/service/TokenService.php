@@ -9,12 +9,14 @@
 namespace app\api\service;
 
 // 还有一个AppToken，除了UserToken之外
+use app\lib\enum\ScopeEnum;
+use app\lib\exception\ForbiddenException;
 use app\lib\exception\TokenException;
 use think\Cache;
 use think\Exception;
 use think\Request;
 
-class Token {
+class TokenService {
     public static function generateToken() {
         // 32个字符组成一组随机字符串
         $randChars = getRandChars();
@@ -49,5 +51,31 @@ class Token {
 
     public static function getCurrentUid() {
         return self::getCurrentTokenVar('uid');
+    }
+
+    // 用户和管理员都可以访问的权限
+    public static function needPrimaryScope() {
+        $scope = self::getCurrentTokenVar('scope');
+        if(empty($scope)) {
+            throw new TokenException();
+        }
+        if($scope >= ScopeEnum::User) {
+            return true;
+        } else {
+            throw new ForbiddenException();
+        }
+    }
+
+    // 只有用户有权限，管理员没权限
+    public static function needExclusiveScope() {
+        $scope = self::getCurrentTokenVar('scope');
+        if(empty($scope)) {
+            throw new TokenException();
+        }
+        if($scope == ScopeEnum::User) {
+            return true;
+        } else {
+            throw new ForbiddenException();
+        }
     }
 }

@@ -4,6 +4,8 @@ namespace app\api\model;
 
 class Product extends BaseModel
 {
+    protected $resultSetType = 'collection'; //设置返回数据集的对象名
+
     // 一个商品对应多个描述图片
     public function imgs() {
         return $this->hasMany('ProductImage', 'product_id', 'id');

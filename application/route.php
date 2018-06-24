@@ -82,3 +82,8 @@ Route::group('api/:v/address', function() {
     Route::post('', 'api/:v.AddressController/createOrUpdateAddress');
 });
 
+// order
+Route::group('api/:v/order', function() {
+    Route::post('', 'api/:v.OrderController/placeOrder');
+});
+
