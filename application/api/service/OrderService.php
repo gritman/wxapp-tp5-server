@@ -48,6 +48,7 @@ class OrderService {
 
     // 写入订单信息，返回订单id和订单编号
     private function createOrder($snapOrder) {
+        Db::startTrans();
         try {
             $orderNo = $this->makeOrderNo();
             $order = new \app\api\model\Order();
@@ -69,14 +70,14 @@ class OrderService {
             $orderProduct = new OrderProduct();
             $dataToSave = $this->oProducts;
             $orderProduct->saveAll($this->oProducts);
-            // Db::commit();
+            Db::commit();
             return [
                 'order_no' => $orderNo,
                 'order_id' => $orderId,
                 'create_time' => $create_time
             ];
         } catch(Exception $e) {
-            // Db::rollback();
+            Db::rollback();
             throw $e;
         }
     }
